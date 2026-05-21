@@ -96,6 +96,14 @@ Recommended local setup:
 python -m pip install -e ".[dev,data]"
 ```
 
+For tools that expect a traditional requirements file, install the same runtime,
+data, test, and lint dependencies with:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip install -e .
+```
+
 If you only need the package without downloading data:
 
 ```bash
