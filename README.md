@@ -4,6 +4,89 @@ This project was done in collaboration with Jeffrey Kuo jrkuo2015 [at] berkeley 
 
 To view detailed derivation of methods, please read [Method_Details.pdf](https://github.com/Ttantivi/NBA_Predict/blob/main/Method_Details.pdf)
 
+## Reproducible Research Refactor
+
+This fork is being refactored for a reproducible research course project. The
+original R Markdown workflow is preserved in the repository, while the active
+project code is moving into an installable Python package under `src/nba_predict`.
+
+Current Python package responsibilities:
+
+```text
+src/nba_predict/
+  config.py      project paths and default settings
+  data.py        raw game log preprocessing and design matrix generation
+  modeling.py    logistic, ridge, and lasso model classes
+  pipeline.py    high-level data and evaluation pipeline
+  cli.py         command line interface
+```
+
+Expected data layout:
+
+```text
+data/
+  raw/2012_2023_Data.csv
+  processed/design_matrix.csv
+outputs/
+  metrics/
+  predictions/
+  figures/
+  models/
+```
+
+Install the package locally:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+Install with the optional data downloader:
+
+```bash
+python -m pip install -e ".[dev,data]"
+```
+
+Download the raw NBA team game logs using Python:
+
+```bash
+nba-predict download-data \
+  --season-start 2013 \
+  --season-end 2023 \
+  --output data/raw/2012_2023_Data.csv
+```
+
+Generate the design matrix from the raw game log CSV:
+
+```bash
+nba-predict prepare-data \
+  --raw data/raw/2012_2023_Data.csv \
+  --output data/processed/design_matrix.csv
+```
+
+Evaluate a translated baseline model:
+
+```bash
+nba-predict evaluate --model lasso --season 2022-23 --cv-folds 3
+```
+
+Run all translated baseline models:
+
+```bash
+nba-predict run-baseline --season 2022-23 --cv-folds 3
+```
+
+The original R Markdown code used 10-fold cross-validation for ridge/lasso.
+That setting is still available with `--cv-folds 10`, but the default is lower
+so the rolling season evaluation remains practical during reproducibility checks.
+
+The main models translated from the original R workflow are:
+
+- `logistic`: regular logistic regression with the full feature set.
+- `inference-logistic`: regular logistic regression using the inference-focused
+  feature set.
+- `ridge`: cross-validated ridge logistic regression.
+- `lasso`: cross-validated lasso logistic regression.
+
 ![NBA Logo](./Images/nba_logo_small.png)
 
 ## Introduction

@@ -39,8 +39,34 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# pkgdown site
-docs/
+# pkgdown / Sphinx generated site
+docs/_build/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+
+# Project data and generated outputs
+data/raw/*
+data/processed/*
+outputs/models/*
+outputs/figures/*
+outputs/predictions/*
+outputs/metrics/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!outputs/models/.gitkeep
+!outputs/figures/.gitkeep
+!outputs/predictions/.gitkeep
+!outputs/metrics/.gitkeep
 
 # translation temp files
 po/*~
