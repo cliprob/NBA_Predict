@@ -9,6 +9,8 @@ To view detailed derivation of methods, please read [Method_Details.pdf](https:/
 This fork is being refactored for a reproducible research course project. The
 original R Markdown workflow is preserved in the repository, while the active
 project code is moving into an installable Python package under `src/nba_predict`.
+Collaborators should use the branch and pull request workflow described in
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 Current Python package responsibilities:
 
