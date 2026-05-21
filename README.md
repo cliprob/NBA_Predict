@@ -96,6 +96,13 @@ Recommended local setup:
 python -m pip install -e ".[dev,data]"
 ```
 
+Or use the project automation targets:
+
+```bash
+make install-dev
+make check
+```
+
 For tools that expect a traditional requirements file, install the same runtime,
 data, test, and lint dependencies with:
 
@@ -114,18 +121,26 @@ Check code style:
 
 ```bash
 python -m ruff check src
+make lint
 ```
 
 Run the automated tests:
 
 ```bash
 python -m pytest
+make test
 ```
 
 Check Python syntax:
 
 ```bash
 python -m compileall src
+```
+
+Run the standard local verification bundle:
+
+```bash
+make check
 ```
 
 ## Data Reproduction
@@ -166,6 +181,7 @@ Run all translated baseline models:
 
 ```bash
 nba-predict run-baseline --season 2022-23 --cv-folds 3
+make baseline SEASON=2022-23 CV_FOLDS=3
 ```
 
 Available translated baseline models:

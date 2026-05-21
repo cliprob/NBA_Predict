@@ -58,9 +58,7 @@ Use closing keywords such as `Closes #7` when the PR fully completes an issue.
 Before opening a pull request, run the checks relevant to your change:
 
 ```bash
-python -m ruff check src
-python -m pytest
-python -m compileall src
+make check
 ```
 
 For data and model changes, verify the pipeline from raw data through metrics:
