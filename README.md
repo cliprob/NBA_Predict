@@ -89,6 +89,9 @@ The main models translated from the original R workflow are:
 - `ridge`: cross-validated ridge logistic regression.
 - `lasso`: cross-validated lasso logistic regression.
 
+A notebook demonstration of the package workflow is available at
+[`notebooks/demo_pipeline.ipynb`](notebooks/demo_pipeline.ipynb).
+
 ![NBA Logo](./Images/nba_logo_small.png)
 
 ## Introduction
