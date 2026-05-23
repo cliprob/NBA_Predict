@@ -156,6 +156,10 @@ The upstream repository did not commit the generated CSV files. It generated
 data from R using `nbastatR::game_logs()`. This fork replaces that step with a
 Python downloader based on `nba_api`.
 
+The 2025-26 data refresh, generated artifacts, schema notes, preprocessing
+assumptions, and Docker/report handoff notes are documented in
+[`DATA_REPRODUCTION_2025_26.md`](DATA_REPRODUCTION_2025_26.md).
+
 Download raw team game logs:
 
 ```bash
