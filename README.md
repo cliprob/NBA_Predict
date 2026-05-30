@@ -8,6 +8,10 @@ R Markdown workflow is preserved in [`legacy/`](legacy/) for traceability. The
 active project is implemented as an installable Python package under
 [`src/nba_predict`](src/nba_predict).
 
+The canonical runtime is Python 3.11. For cross-platform reproduction, use the
+Docker workflow below; it avoids relying on a collaborator's local Python,
+operating system, or Make installation.
+
 ## Current Execution Path
 
 The active pipeline is not run from the legacy R Markdown files. Use the Python
@@ -79,14 +83,14 @@ legacy/
 | Core code outside notebooks | The production path is implemented in Python scripts under `src/nba_predict`; the notebook is only a demonstration. | Done |
 | Docstrings | Public classes and methods in the Python package include docstrings. | Done |
 | Linting settings | Ruff configuration is stored in [`pyproject.toml`](pyproject.toml). Run `python -m ruff check src`. Pre-commit hook setup is tracked in issue [#15](https://github.com/AntonioZhouPL/NBA_Predict/issues/15). | Partially done |
-| Tests | Testing is tracked in issue [#6](https://github.com/AntonioZhouPL/NBA_Predict/issues/6). | Pending, owner: Franek |
+| Tests | Pytest coverage is stored under [`tests/`](tests/) and is run by GitHub Actions. | Done |
 | Sphinx documentation | Sphinx HTML documentation is tracked in issue [#15](https://github.com/AntonioZhouPL/NBA_Predict/issues/15). | Pending |
 | Demonstration notebook | [`notebooks/demo_pipeline.ipynb`](notebooks/demo_pipeline.ipynb) demonstrates the package workflow. | Done |
-| Final report | Dynamic report using Quarto or Marimo is tracked in issue [#9](https://github.com/AntonioZhouPL/NBA_Predict/issues/9). | Pending, owner: Robert |
+| Final report | The Quarto report is defined in [`report/report.qmd`](report/report.qmd) and generated with `make report`. | Done, owner: Robert |
 | Reproducible data pipeline | Python data download and design matrix generation are implemented through `nba-predict download-data` and `nba-predict prepare-data`. Updated data work is tracked in issues [#1](https://github.com/AntonioZhouPL/NBA_Predict/issues/1) and [#2](https://github.com/AntonioZhouPL/NBA_Predict/issues/2). | Partially done |
-| Fixed deterministic execution mode | Tracked in issue [#8](https://github.com/AntonioZhouPL/NBA_Predict/issues/8). | Pending, owner: Franek |
-| Docker environment | Docker reproducibility and DockerHub image are tracked in issue [#10](https://github.com/AntonioZhouPL/NBA_Predict/issues/10). | Pending, owner: Robert |
-| Automation | Makefile automation is tracked in issue [#7](https://github.com/AntonioZhouPL/NBA_Predict/issues/7). | Pending, owner: Franek |
+| Fixed deterministic execution mode | `make reproduce` runs the frozen snapshot and verifies metrics against [`data/reproducibility/expected_metrics.json`](data/reproducibility/expected_metrics.json). | Done, owner: Franek |
+| Docker environment | [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml), and DockerHub commands are documented below. | Done, owner: Robert |
+| Automation | [`Makefile`](Makefile) automates install, checks, data, baseline, report, and Docker commands. | Done, owner: Franek |
 
 ## Setup
 
@@ -102,6 +106,61 @@ Or use the project automation targets:
 make install-dev
 make check
 ```
+
+## Reproduce on Any Machine
+
+The Docker image is the preferred way to reproduce the project on Windows,
+macOS, and Linux. It uses Python 3.11, pinned Python dependencies, GNU Make,
+and a pinned Quarto CLI.
+
+Build locally from a clean checkout:
+
+```bash
+docker build -t cliprob/nba-predict:latest .
+docker run --rm cliprob/nba-predict:latest make reproduce
+```
+
+After the image has been published to DockerHub, a reviewer can pull it instead
+of building it:
+
+```bash
+docker pull cliprob/nba-predict:latest
+docker run --rm cliprob/nba-predict:latest make reproduce
+```
+
+Generate the Quarto report while writing outputs back to the checked-out
+repository.
+
+macOS/Linux shells:
+
+```bash
+docker run --rm -v "$(pwd)":/app cliprob/nba-predict:latest make report
+```
+
+Windows PowerShell:
+
+```powershell
+docker run --rm -v ${PWD}:/app cliprob/nba-predict:latest make report
+```
+
+Docker Compose provides the same runtime configuration:
+
+```bash
+docker compose run --rm nba-predict make reproduce
+docker compose run --rm nba-predict make report
+```
+
+Publish the multi-platform DockerHub image after logging in:
+
+```bash
+docker login
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t cliprob/nba-predict:latest \
+  --push .
+```
+
+Local `make` usage is optional. On Windows, use Git Bash, WSL, MSYS2, or the
+Docker commands above. Inside the Docker image, `make` is already installed.
 
 For the pinned reproducibility environment:
 
@@ -148,6 +207,14 @@ Run the standard local verification bundle:
 
 ```bash
 make check
+```
+
+Install and run pre-commit hooks locally:
+
+```bash
+python -m pip install pre-commit
+pre-commit install
+pre-commit run --all-files
 ```
 
 ## Data Reproduction
@@ -206,6 +273,12 @@ nba-predict run-baseline \
 make reproduce
 ```
 
+Generate the final Quarto report:
+
+```bash
+make report
+```
+
 Available translated baseline models:
 
 - `logistic`: regular logistic regression with the full feature set.
@@ -261,6 +334,17 @@ NBA API changes over time.
 
 The notebook is a demonstration artifact. The active pipeline remains the Python
 package and CLI.
+
+## Continuous Integration
+
+GitHub Actions runs syntax checks, Pytest, and Ruff on Python 3.11 across Linux,
+macOS, and Windows. A separate Docker job builds the project image and runs
+`make reproduce` inside the container.
+
+## AI Usage
+
+This project used AI assistance for planning, code editing, and documentation.
+The scope and model details are documented in [`AI_USAGE.md`](AI_USAGE.md).
 
 ## Project Management
 
