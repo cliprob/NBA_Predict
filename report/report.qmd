@@ -43,6 +43,43 @@ make baseline-2025-26
 make report
 ```
 
+## How The Prediction Model Works
+
+The machine learning task is binary classification. Each row in the design
+matrix represents one NBA regular-season game from the home team's perspective.
+The target variable is `outcomeGame`: it is `1` when the home team won and `0`
+when the home team lost.
+
+The model does not use team names as direct labels. Instead, it compares recent
+team form. Most input features are home-team metrics minus away-team metrics,
+computed from rolling 10-game windows. For example, `avg_win_perc` compares the
+two teams' recent win percentage, `avg_orate` and `avg_drate` compare recent
+offensive and defensive ratings, `avg_true_s` compares true shooting, and
+`isB2BSecond` captures whether the home team is on the second night of a
+back-to-back relative to the away team.
+
+The translated baseline models are logistic-regression classifiers:
+
+- regular logistic regression estimates the probability that the home team wins;
+- ridge logistic regression adds L2 regularization, which keeps coefficients
+  smaller and more stable;
+- lasso logistic regression adds L1 regularization, which can push weaker
+  feature coefficients toward zero.
+
+Evaluation is rolling through the target season. Before each game day, the model
+is refit using only games that happened earlier. It then predicts that day's
+games. This matters for reproducibility and research validity because it avoids
+using future information when evaluating past predictions.
+
+## Why This Is A Reproducibility Project
+
+The goal is not to invent a new NBA prediction method. The original project
+already defined a modeling idea in R Markdown. This repository focuses on making
+that empirical workflow reproducible: preserving the legacy files, translating
+the workflow to Python classes, adding tests, automating execution with
+Makefile targets, freezing a deterministic smoke-test path, containerizing the
+runtime with Docker, and rendering a final Quarto report.
+
 ## Data and Results
 
 {{< include generated/metrics_summary.md >}}
