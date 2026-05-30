@@ -68,6 +68,12 @@ outputs/metrics/*
 !outputs/predictions/.gitkeep
 !outputs/metrics/.gitkeep
 
+# Generated report artifacts
+report/generated/
+report/_site/
+report/.quarto/
+report/*.html
+
 # translation temp files
 po/*~
 

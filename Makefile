@@ -1,8 +1,9 @@
-.PHONY: install-dev lint test check download-data prepare-data evaluate baseline data-2025-26 prepare-2025-26 baseline-2025-26 reproduce docker-build docker-reproduce clean
+.PHONY: install-dev lint test check download-data prepare-data evaluate baseline data-2025-26 prepare-2025-26 baseline-2025-26 reproduce report docker-build docker-reproduce clean
 
 VENV ?= .venv
 PYTHON ?= $(VENV)/bin/python
 NBA_PREDICT ?= $(VENV)/bin/nba-predict
+QUARTO ?= quarto
 SEASON ?= 2022-23
 SEASON_START ?= 2013
 SEASON_END ?= 2023
@@ -19,6 +20,7 @@ NEW_SEASON_END ?= 2026
 NEW_RAW ?= data/raw/2012_2026_Data.csv
 NEW_DESIGN_MATRIX ?= data/processed/design_matrix_2012_2026.csv
 DOCKER_IMAGE ?= cliprob/nba-predict:latest
+REPORT_SUMMARY ?= report/generated/metrics_summary.md
 
 install-dev:
 	test -d $(VENV) || python3 -m venv $(VENV)
@@ -85,6 +87,12 @@ reproduce:
 		--metrics-dir outputs/metrics \
 		--season $(SEASON) \
 		--tolerance $(REPRO_TOLERANCE)
+
+report:
+	$(PYTHON) -m nba_predict.reporting \
+		--metrics-dir outputs/metrics \
+		--output $(REPORT_SUMMARY)
+	$(QUARTO) render report/report.qmd
 
 docker-build:
 	docker build -t $(DOCKER_IMAGE) .

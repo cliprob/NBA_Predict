@@ -1,0 +1,63 @@
+---
+title: "NBA Predict Reproducibility Report"
+subtitle: "Original R workflow reproduced in Python and extended with 2025-26 data"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+---
+
+## Project Goal
+
+This project reproduces the original `Ttantivi/NBA_Predict` R Markdown workflow
+as a Python package and evaluates whether the translated NBA game prediction
+pipeline still performs on newer NBA regular-season data.
+
+The active implementation is under `src/nba_predict`. The original R Markdown
+files are preserved in `legacy/` to keep the reproduction traceable.
+
+## Reproducible Workflow
+
+The pipeline is organized around explicit Python classes:
+
+- `NBAStatsDownloader` downloads team game logs from `nba_api`.
+- `NBADataPreprocessor` builds the home-minus-away design matrix.
+- `LogisticGamePredictor` wraps logistic, ridge, and lasso classifiers.
+- `RollingSeasonEvaluator` evaluates models by refitting before each game day.
+- `NBAPredictionPipeline` connects download, preparation, and evaluation steps.
+
+The deterministic offline smoke test uses the frozen snapshot in
+`data/reproducibility/`:
+
+```bash
+make reproduce
+```
+
+The full 2025-26 extension can be regenerated with:
+
+```bash
+make data-2025-26
+make prepare-2025-26
+make baseline-2025-26
+make report
+```
+
+## Data and Results
+
+{{< include generated/metrics_summary.md >}}
+
+## Interpretation
+
+The 2025-26 extension is a temporal holdout-style check: the translated model is
+trained on prior seasons and evaluated on a newer regular season. This does not
+claim to introduce a new prediction method. The research contribution is the
+reproducible translation, execution path, containerized environment, and clear
+comparison between the original reproduced setting and newer data.
+
+## Reproducibility Notes
+
+Generated CSV, JSON, and report outputs are intentionally ignored by Git. They
+should be recreated through the Makefile or Docker commands documented in the
+repository. The Docker image is the canonical environment for cross-platform
+reproduction on Windows, macOS, and Linux.
