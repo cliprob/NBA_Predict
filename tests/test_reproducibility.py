@@ -7,6 +7,8 @@ import pytest
 
 from nba_predict.reproducibility import (
     collect_metric_mismatches,
+    file_sha256,
+    verify_artifact_manifest,
     verify_metrics_snapshot,
 )
 
@@ -73,3 +75,44 @@ def test_verify_metrics_snapshot_accepts_repository_fixture(tmp_path) -> None:
         )
 
     verify_metrics_snapshot(expected_path, metrics_dir, season="2022-23")
+
+
+def test_verify_artifact_manifest_accepts_repository_manifest() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    manifest_path = repo_root / "data" / "reproducibility" / "MANIFEST.json"
+
+    verify_artifact_manifest(manifest_path, project_root=repo_root)
+
+
+def test_verify_artifact_manifest_rejects_hash_mismatch(tmp_path) -> None:
+    data_path = tmp_path / "artifact.csv"
+    data_path.write_text("a,b\n1,2\n", encoding="utf-8")
+    manifest_path = tmp_path / "MANIFEST.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "artifact.csv",
+                        "sha256": "0" * 64,
+                        "kind": "csv",
+                        "rows": 1,
+                        "columns": ["a", "b"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(AssertionError, match="sha256 mismatch"):
+        verify_artifact_manifest(manifest_path, project_root=tmp_path)
+
+
+def test_file_sha256_returns_lowercase_digest(tmp_path) -> None:
+    path = tmp_path / "artifact.txt"
+    path.write_bytes(b"reproducible\n")
+
+    assert file_sha256(path) == (
+        "9eea221f83299a3ebea16d547cb0f1cbbaace6be5c925cd9f0ccfcd1b6549c67"
+    )

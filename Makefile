@@ -13,6 +13,7 @@ DESIGN_MATRIX ?= data/processed/design_matrix.csv
 MODEL ?= logistic
 REPRO_DESIGN_MATRIX ?= data/reproducibility/design_matrix_snapshot.csv
 REPRO_EXPECTED ?= data/reproducibility/expected_metrics.json
+REPRO_MANIFEST ?= data/reproducibility/MANIFEST.json
 REPRO_REQUIREMENTS ?= requirements-lock.txt
 REPRO_TOLERANCE ?= 1e-9
 NEW_SEASON ?= 2025-26
@@ -83,6 +84,7 @@ reproduce:
 		CV_FOLDS=$(CV_FOLDS) \
 		DESIGN_MATRIX=$(REPRO_DESIGN_MATRIX)
 	$(PYTHON) -m nba_predict.reproducibility \
+		--manifest $(REPRO_MANIFEST) \
 		--expected $(REPRO_EXPECTED) \
 		--metrics-dir outputs/metrics \
 		--season $(SEASON) \

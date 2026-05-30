@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "description": "Deterministic offline reproduction inputs and expected outputs.",
+  "created": "2026-05-30",
+  "runtime": {
+    "python": "3.11",
+    "quarto": "1.9.38"
+  },
+  "files": [
+    {
+      "path": "data/reproducibility/design_matrix_snapshot.csv",
+      "sha256": "7532de7ed9f308332876434e3bc61b14c323d6ce191b8e82298041df47d2227d",
+      "kind": "csv",
+      "rows": 18,
+      "columns": [
+        "slugSeason",
+        "dateGame",
+        "outcomeGame",
+        "isB2BSecond",
+        "avg_treb",
+        "avg_stl",
+        "avg_blk",
+        "avg_tov",
+        "avg_orate",
+        "avg_drate",
+        "avg_pl_min",
+        "avg_true_s",
+        "avg_win_perc"
+      ]
+    },
+    {
+      "path": "data/reproducibility/expected_metrics.json",
+      "sha256": "a512e5c1c8cb76a032d88c55b37fb481c59b632724c0a4bb6c3484340040ca1d",
+      "kind": "json"
+    },
+    {
+      "path": "requirements-lock.txt",
+      "sha256": "87889a90a8d42083d73d9e1adbca932e5a367261d7e75d1c138788930a159c51",
+      "kind": "text"
+    }
+  ]
+}
