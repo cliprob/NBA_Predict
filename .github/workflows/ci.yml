@@ -51,3 +51,6 @@ jobs:
 
       - name: Run deterministic reproduction in Docker
         run: docker run --rm cliprob/nba-predict:ci make reproduce
+
+      - name: Render report in Docker
+        run: docker run --rm cliprob/nba-predict:ci make report

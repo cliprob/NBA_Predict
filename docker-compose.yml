@@ -3,6 +3,14 @@ services:
     build: .
     image: airmazurczak/nba-predict:latest
     working_dir: /app
+    command: make reproduce
+
+  nba-predict-dev:
+    build: .
+    image: airmazurczak/nba-predict:latest
+    working_dir: /app
+    profiles:
+      - dev
     volumes:
       - .:/app
     command: make reproduce

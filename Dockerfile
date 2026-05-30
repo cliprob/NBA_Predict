@@ -1,6 +1,6 @@
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm@sha256:8dca233de9f3d9bb410665f00a4da6dd06f331083137e0e98ccf227236fcc438
 
-ARG QUARTO_VERSION=1.7.32
+ARG QUARTO_VERSION=1.9.38
 ARG TARGETARCH
 
 ENV PYTHONUNBUFFERED=1 \
@@ -10,25 +10,33 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-RUN apt-get update \
+RUN set -eux; \
+    apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
         make \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker_arch="${TARGETARCH:-$(dpkg --print-architecture)}" \
+RUN set -eux; \
+    docker_arch="${TARGETARCH:-$(dpkg --print-architecture)}" \
     && case "${docker_arch}" in \
         amd64) quarto_arch="amd64" ;; \
         arm64) quarto_arch="arm64" ;; \
         *) echo "Unsupported Docker architecture: ${docker_arch}" >&2; exit 1 ;; \
     esac \
+    && quarto_asset="quarto-${QUARTO_VERSION}-linux-${quarto_arch}.deb" \
     && curl -fsSL \
-        "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-${quarto_arch}.deb" \
-        -o /tmp/quarto.deb \
+        "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/${quarto_asset}" \
+        -o "/tmp/${quarto_asset}" \
+    && curl -fsSL \
+        "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-checksums.txt" \
+        -o /tmp/quarto-checksums.txt \
+    && cd /tmp \
+    && grep " ${quarto_asset}$" quarto-checksums.txt | sha256sum -c - \
     && apt-get update \
-    && apt-get install -y --no-install-recommends /tmp/quarto.deb \
-    && rm -f /tmp/quarto.deb \
+    && apt-get install -y --no-install-recommends "/tmp/${quarto_asset}" \
+    && rm -f "/tmp/${quarto_asset}" /tmp/quarto-checksums.txt \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements-lock.txt pyproject.toml README.md ./
