@@ -20,6 +20,8 @@ outputs/predictions/*
 
 report/_site
 report/.quarto
+_site
+.quarto
 *.html
 
 .env

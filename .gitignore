@@ -73,6 +73,8 @@ report/generated/
 report/_site/
 report/.quarto/
 report/*.html
+_site/
+.quarto/
 
 # translation temp files
 po/*~
