@@ -141,6 +141,7 @@ Windows PowerShell:
 
 ```powershell
 docker run --rm -v ${PWD}:/app airmazurczak/nba-predict:latest make report
+start .\report\_site\report\report.html
 ```
 
 Docker Compose provides the same runtime configuration:
@@ -277,6 +278,12 @@ Generate the final Quarto report:
 
 ```bash
 make report
+```
+
+Open the rendered report on Windows:
+
+```powershell
+start .\report\_site\report\report.html
 ```
 
 Available translated baseline models:
