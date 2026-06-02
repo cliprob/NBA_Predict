@@ -249,7 +249,32 @@ Build the Sphinx HTML documentation:
 make docs
 ```
 
+On Windows PowerShell, build the documentation through Docker if local `make`
+is not installed:
+
+```powershell
+docker run --rm -v ${PWD}:/app airmazurczak/nba-predict:latest make docs
+```
+
 The generated documentation is written to `docs/_build/html/index.html`.
+
+Open the generated documentation on macOS:
+
+```bash
+open ./docs/_build/html/index.html
+```
+
+Open the generated documentation on Linux:
+
+```bash
+xdg-open ./docs/_build/html/index.html
+```
+
+Open the generated documentation on Windows:
+
+```powershell
+start .\docs\_build\html\index.html
+```
 
 Install and run pre-commit hooks locally after installing the development
 environment:
