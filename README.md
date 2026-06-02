@@ -129,15 +129,16 @@ docker run --rm airmazurczak/nba-predict:latest make reproduce
 ```
 
 After the image has been published to DockerHub, a reviewer can pull it instead
-of building it. For strict reproduction, prefer the immutable image digest from
-the release notes over the mutable `latest` tag:
+of building it. For strict reproduction, prefer the immutable image digest over
+the mutable `latest` tag. The digest can be checked with
+`docker buildx imagetools inspect airmazurczak/nba-predict:latest`.
 
 ```bash
 docker pull airmazurczak/nba-predict:latest
 docker run --rm airmazurczak/nba-predict:latest make reproduce
 
 # Stricter after publication:
-docker run --rm airmazurczak/nba-predict@sha256:<published-digest> make reproduce
+docker run --rm airmazurczak/nba-predict@sha256:3bc9c3b41c39d35c598e64f84314a71e672382f494985ac25d10519d8fea3bb7 make reproduce
 ```
 
 Generate the Quarto report while writing outputs back to the checked-out
