@@ -277,7 +277,9 @@ start .\docs\_build\html\index.html
 ```
 
 Install and run pre-commit hooks locally after installing the development
-environment:
+environment. These hooks are local Git hooks; pulling the Docker image does not
+install them on your machine. Docker is the canonical reproduction environment,
+while pre-commit is optional local developer hygiene before creating commits.
 
 ```bash
 python -m pre_commit install
