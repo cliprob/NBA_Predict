@@ -150,6 +150,18 @@ macOS/Linux shells:
 docker run --rm -v "$(pwd)":/app airmazurczak/nba-predict:latest make report
 ```
 
+Open the rendered report on macOS:
+
+```bash
+open ./report/_site/report/report.html
+```
+
+Open the rendered report on Linux:
+
+```bash
+xdg-open ./report/_site/report/report.html
+```
+
 Windows PowerShell:
 
 ```powershell
@@ -307,6 +319,18 @@ Generate the final Quarto report:
 
 ```bash
 make report
+```
+
+Open the rendered report on macOS:
+
+```bash
+open ./report/_site/report/report.html
+```
+
+Open the rendered report on Linux:
+
+```bash
+xdg-open ./report/_site/report/report.html
 ```
 
 Open the rendered report on Windows:
