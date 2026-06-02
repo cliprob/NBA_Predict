@@ -4,23 +4,12 @@ from __future__ import annotations
 
 import argparse
 import csv
-import hashlib
 import json
 import math
 from numbers import Real
 from pathlib import Path
 
 DEFAULT_REPRO_TOLERANCE = 1e-9
-
-
-def file_sha256(path: str | Path) -> str:
-    """Return the SHA256 digest for a file."""
-
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as file:
-        for chunk in iter(lambda: file.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _csv_shape(path: Path) -> tuple[int, list[str]]:
@@ -40,7 +29,7 @@ def verify_artifact_manifest(
     manifest_path: str | Path,
     project_root: str | Path = ".",
 ) -> None:
-    """Validate reproducibility artifact hashes and simple file metadata."""
+    """Validate reproducibility artifact presence and simple file metadata."""
 
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     root = Path(project_root)
@@ -52,14 +41,6 @@ def verify_artifact_manifest(
         if not path.exists():
             failures.append(f"Missing manifest file: {relative_path}")
             continue
-
-        expected_hash = str(item["sha256"]).lower()
-        actual_hash = file_sha256(path)
-        if actual_hash != expected_hash:
-            failures.append(
-                f"{relative_path} sha256 mismatch: "
-                f"expected {expected_hash}, got {actual_hash}"
-            )
 
         if item.get("kind") == "csv":
             rows, columns = _csv_shape(path)

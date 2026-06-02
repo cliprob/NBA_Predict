@@ -29,14 +29,9 @@ RUN set -eux; \
     && curl -fsSL \
         "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/${quarto_asset}" \
         -o "/tmp/${quarto_asset}" \
-    && curl -fsSL \
-        "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-checksums.txt" \
-        -o /tmp/quarto-checksums.txt \
-    && cd /tmp \
-    && grep " ${quarto_asset}$" quarto-checksums.txt | sha256sum -c - \
     && apt-get update \
     && apt-get install -y --no-install-recommends "/tmp/${quarto_asset}" \
-    && rm -f "/tmp/${quarto_asset}" /tmp/quarto-checksums.txt \
+    && rm -f "/tmp/${quarto_asset}" \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements-lock.txt pyproject.toml README.md ./

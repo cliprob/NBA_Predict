@@ -17,8 +17,8 @@ stored under `outputs/metrics/` and `outputs/predictions/`.
 The live NBA API request is intentionally separate from the deterministic
 offline reproduction path in `data/reproducibility/`, because NBA.com responses
 can change or become unavailable. The offline path is guarded by
-`data/reproducibility/MANIFEST.json`, which records hashes and shape metadata
-for the committed deterministic artifacts.
+`data/reproducibility/MANIFEST.json`, which records shape metadata for the
+committed deterministic artifacts.
 
 ## Regeneration Commands
 

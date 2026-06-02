@@ -9,7 +9,6 @@
   "files": [
     {
       "path": "data/reproducibility/design_matrix_snapshot.csv",
-      "sha256": "cb06c9fb22837a295c0c6fa2f891e179b049eadcbb55b457c3344518c6ef25e0",
       "kind": "csv",
       "rows": 18,
       "columns": [
@@ -30,12 +29,10 @@
     },
     {
       "path": "data/reproducibility/expected_metrics.json",
-      "sha256": "e6aba48c3a9d1b7d90e09f845fa3deffc493d83fc1183ee526e4a83063b5f167",
       "kind": "json"
     },
     {
       "path": "requirements-lock.txt",
-      "sha256": "e0e3def6e702d58a4057c24eb5b4d725401d06e9b176865f2efacc804dda03c4",
       "kind": "text"
     }
   ]

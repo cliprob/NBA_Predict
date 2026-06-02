@@ -116,10 +116,8 @@ make check
 ## Reproduce on Any Machine
 
 The Docker image is the preferred way to reproduce the project on Windows,
-macOS, and Linux. It uses a pinned Python 3.11 slim-bookworm base-image digest,
-pinned Python dependencies, GNU Make, and Quarto CLI 1.9.38. The Docker build
-verifies the downloaded Quarto package against the release checksum file before
-installing it.
+macOS, and Linux. It uses a pinned Python 3.11 slim-bookworm base image, pinned
+Python dependencies, GNU Make, and Quarto CLI 1.9.38.
 
 Build locally from a clean checkout:
 
@@ -129,16 +127,11 @@ docker run --rm airmazurczak/nba-predict:latest make reproduce
 ```
 
 After the image has been published to DockerHub, a reviewer can pull it instead
-of building it. For strict reproduction, prefer the immutable image digest over
-the mutable `latest` tag. The digest can be checked with
-`docker buildx imagetools inspect airmazurczak/nba-predict:latest`.
+of building it:
 
 ```bash
 docker pull airmazurczak/nba-predict:latest
 docker run --rm airmazurczak/nba-predict:latest make reproduce
-
-# Stricter after publication:
-docker run --rm airmazurczak/nba-predict@sha256:3bc9c3b41c39d35c598e64f84314a71e672382f494985ac25d10519d8fea3bb7 make reproduce
 ```
 
 Generate the Quarto report while writing outputs back to the checked-out
@@ -400,7 +393,7 @@ The live `download-data` step depends on `nba_api`, so it is not treated as the
 deterministic execution path. The fixed reproducibility path for this project is:
 
 1. install the pinned dependencies from [`requirements-lock.txt`](requirements-lock.txt);
-2. verify the artifact hashes and CSV shape in
+2. verify artifact presence and CSV shape in
    [`data/reproducibility/MANIFEST.json`](data/reproducibility/MANIFEST.json);
 3. run the baseline models against the frozen snapshot
    [`data/reproducibility/design_matrix_snapshot.csv`](data/reproducibility/design_matrix_snapshot.csv);
