@@ -1,6 +1,53 @@
 # NBA_Predict
 
-Reproducible Python pipeline for predicting NBA regular season game outcomes.
+[![CI](https://github.com/cliprob/NBA_Predict/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cliprob/NBA_Predict/actions/workflows/ci.yml)
+![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-reproducible_runtime-2496ED?logo=docker&logoColor=white)
+![Ruff](https://img.shields.io/badge/lint-Ruff-D7FF64?logo=ruff&logoColor=261230)
+![Pytest](https://img.shields.io/badge/tests-Pytest-0A9EDC?logo=pytest&logoColor=white)
+
+Reproducible Python research pipeline for evaluating baseline models that
+predict NBA regular-season game outcomes.
+
+## Portfolio Highlights
+
+- **Reproducible Docker runtime:** a digest-pinned Python 3.11 base image,
+  locked Python dependencies, GNU Make, and Quarto define the canonical
+  environment.
+- **Deterministic research workflow:** `make reproduce` runs against a frozen
+  snapshot, validates its manifest, and compares regenerated metrics with
+  versioned expectations.
+- **Maintainable Python package and CLI:** the active implementation uses a
+  `src/` layout, `pyproject.toml`, testable modules, and the `nba-predict`
+  command-line entry point.
+- **Cross-platform CI:** GitHub Actions runs syntax, Pytest, Ruff, and Sphinx
+  checks on Linux, macOS, and Windows, then verifies reproduction and report
+  rendering in Docker.
+- **Visible Git collaboration:** issues, task branches, pull requests, a
+  milestone, a project board, and [`CONTRIBUTING.md`](CONTRIBUTING.md) document
+  how this course team worked together.
+- **Generated documentation and report:** Sphinx builds the package reference,
+  while Quarto turns regenerated metrics into the final research report.
+
+## Quick Reproduction
+
+From a clean checkout with Docker available:
+
+```bash
+docker build -t nba-predict:local .
+docker run --rm nba-predict:local make reproduce
+```
+
+The equivalent Compose command is:
+
+```bash
+docker compose run --rm nba-predict make reproduce
+```
+
+## Reviewer Guide
+
+For a reviewer-oriented explanation of the Git, Docker, CI, and
+reproducibility design, see [`SHOWCASE.md`](SHOWCASE.md).
 
 This repository is a course-project fork of
 [`Ttantivi/NBA_Predict`](https://github.com/Ttantivi/NBA_Predict). The original
