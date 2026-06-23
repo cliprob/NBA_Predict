@@ -25,9 +25,10 @@ Generate the Quarto report:
 
    make report
 
-The DockerHub image exposes the same reproduction command:
+If published to DockerHub, the public image exposes the same reproduction
+command:
 
 .. code-block:: bash
 
-   docker pull airmazurczak/nba-predict:latest
-   docker run --rm airmazurczak/nba-predict:latest make reproduce
+   docker pull cliprob/nba-predict:latest
+   docker run --rm cliprob/nba-predict:latest make reproduce
