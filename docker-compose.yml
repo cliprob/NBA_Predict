@@ -1,13 +1,13 @@
 services:
   nba-predict:
     build: .
-    image: airmazurczak/nba-predict:latest
+    image: cliprob/nba-predict:latest
     working_dir: /app
     command: make reproduce
 
   nba-predict-dev:
     build: .
-    image: airmazurczak/nba-predict:latest
+    image: cliprob/nba-predict:latest
     working_dir: /app
     profiles:
       - dev

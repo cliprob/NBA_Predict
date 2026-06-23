@@ -1,8 +1,46 @@
 # NBA_Predict
 
+[![CI](https://github.com/cliprob/NBA_Predict/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cliprob/NBA_Predict/actions/workflows/ci.yml)
+![Python 3.11](https://img.shields.io/badge/python-3.11-blue)
+![Docker](https://img.shields.io/badge/docker-reproducible-blue)
+
 Reproducible Python pipeline for predicting NBA regular season game outcomes.
 
-This repository is a course-project fork of
+## Portfolio Note
+
+This repository is my portfolio mirror of a collaborative NBA prediction course project.
+
+My contribution focused on making the project reproducible and reviewable across machines: Docker-based execution, report generation, Makefile automation, and documentation of the reproducibility workflow.
+
+Original collaborative repository: https://github.com/AntonioZhouPL/NBA_Predict
+
+For a portfolio-oriented technical walkthrough, see [`SHOWCASE.md`](SHOWCASE.md).
+
+## Portfolio Highlights
+
+- Predicts NBA regular season game outcomes from team-level historical game logs.
+- Uses Docker as the reviewer-friendly runtime so results do not depend on a local OS, Python installation, or Make setup.
+- Provides deterministic checks through `make reproduce`, a frozen design-matrix snapshot, pinned dependencies, and expected metrics.
+- Packages the active workflow as an installable Python project under [`src/nba_predict`](src/nba_predict) with the `nba-predict` CLI.
+- Runs CI on Linux, macOS, and Windows, plus a Docker reproducibility job.
+- Generates reviewer-facing outputs through Sphinx docs and a Quarto report.
+
+## Quick Docker Reproduction
+
+```bash
+docker build -t cliprob/nba-predict:latest .
+docker run --rm cliprob/nba-predict:latest make reproduce
+```
+
+Optional Docker Compose equivalent:
+
+```bash
+docker compose run --rm nba-predict make reproduce
+```
+
+## Project Context
+
+This repository is a portfolio mirror of a course-project fork of
 [`Ttantivi/NBA_Predict`](https://github.com/Ttantivi/NBA_Predict). The original
 R Markdown workflow is preserved in [`legacy/`](legacy/) for traceability. The
 active project is implemented as an installable Python package under
@@ -95,7 +133,7 @@ legacy/
 | Final report | The Quarto report is defined in [`report/report.qmd`](report/report.qmd) and generated with `make report`. | Done, owner: Robert |
 | Reproducible data pipeline | Python data download and design matrix generation are implemented through `nba-predict download-data` and `nba-predict prepare-data`. Updated data work is tracked in issues [#1](https://github.com/AntonioZhouPL/NBA_Predict/issues/1) and [#2](https://github.com/AntonioZhouPL/NBA_Predict/issues/2). | Partially done |
 | Fixed deterministic execution mode | `make reproduce` runs the frozen snapshot and verifies metrics against [`data/reproducibility/expected_metrics.json`](data/reproducibility/expected_metrics.json). | Done, owner: Franek |
-| Docker environment | [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml), and DockerHub commands are documented below. | Done, owner: Robert |
+| Docker environment | [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml), and Docker commands are documented below. | Done, owner: Robert |
 | Automation | [`Makefile`](Makefile) automates install, checks, data, baseline, report, and Docker commands. | Done, owner: Franek |
 
 ## Setup
@@ -122,16 +160,16 @@ Python dependencies, GNU Make, and Quarto CLI 1.9.38.
 Build locally from a clean checkout:
 
 ```bash
-docker build -t airmazurczak/nba-predict:latest .
-docker run --rm airmazurczak/nba-predict:latest make reproduce
+docker build -t cliprob/nba-predict:latest .
+docker run --rm cliprob/nba-predict:latest make reproduce
 ```
 
-After the image has been published to DockerHub, a reviewer can pull it instead
-of building it:
+If you publish the image to DockerHub, a reviewer can pull it instead of
+building it locally:
 
 ```bash
-docker pull airmazurczak/nba-predict:latest
-docker run --rm airmazurczak/nba-predict:latest make reproduce
+docker pull cliprob/nba-predict:latest
+docker run --rm cliprob/nba-predict:latest make reproduce
 ```
 
 Generate the Quarto report while writing outputs back to the checked-out
@@ -140,7 +178,7 @@ repository.
 macOS/Linux shells:
 
 ```bash
-docker run --rm -v "$(pwd)":/app airmazurczak/nba-predict:latest make report
+docker run --rm -v "$(pwd)":/app cliprob/nba-predict:latest make report
 ```
 
 Open the rendered report on macOS:
@@ -158,7 +196,7 @@ xdg-open ./report/_site/report/report.html
 Windows PowerShell:
 
 ```powershell
-docker run --rm -v ${PWD}:/app airmazurczak/nba-predict:latest make report
+docker run --rm -v ${PWD}:/app cliprob/nba-predict:latest make report
 start .\report\_site\report\report.html
 ```
 
@@ -177,12 +215,12 @@ into the container:
 docker compose --profile dev run --rm nba-predict-dev make reproduce
 ```
 
-Publish the multi-platform DockerHub image after logging in:
+Optional DockerHub publishing after login:
 
 ```bash
 docker login
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t airmazurczak/nba-predict:latest \
+  -t cliprob/nba-predict:latest \
   --push .
 ```
 
@@ -246,7 +284,7 @@ On Windows PowerShell, build the documentation through Docker if local `make`
 is not installed:
 
 ```powershell
-docker run --rm -v ${PWD}:/app airmazurczak/nba-predict:latest make docs
+docker run --rm -v ${PWD}:/app cliprob/nba-predict:latest make docs
 ```
 
 The generated documentation is written to `docs/_build/html/index.html`.

@@ -28,11 +28,12 @@ is supporting context rather than the main reproducible-research claim.
 ## Reproducible Workflow
 
 The repository is designed so the same workflow can run on Windows, macOS, and
-Linux. The canonical path is Docker, using the published image:
+Linux. The canonical path is Docker, building the image locally or using the
+same tag if it is later published:
 
 ```bash
-docker pull airmazurczak/nba-predict:latest
-docker run --rm airmazurczak/nba-predict:latest make reproduce
+docker build -t cliprob/nba-predict:latest .
+docker run --rm cliprob/nba-predict:latest make reproduce
 ```
 
 The `make reproduce` target is intentionally small and deterministic. It uses a
@@ -43,7 +44,7 @@ regenerated without downloading fresh data from the NBA API.
 To render this report from the same containerized environment:
 
 ```bash
-docker run --rm -v ${PWD}:/app airmazurczak/nba-predict:latest make report
+docker run --rm -v ${PWD}:/app cliprob/nba-predict:latest make report
 ```
 
 The full live-data extension for the 2025-26 season is kept separate because it
